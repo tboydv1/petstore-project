@@ -21,4 +21,16 @@ public class PetServiceImpl implements PetService{
 		return petRepository.findAll();
 	}
 
+	@Override
+	public Pet findOne(Integer petId) {
+		// TODO Auto-generated method stub
+		return petRepository.getOne(petId);
+	}
+
+	@Override
+	public Pet save(Pet pet) {
+		// TODO Auto-generated method stub
+		return petRepository.save(pet);
+	}
+
 }

@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
 
 @Entity
 public class Store {
@@ -20,7 +22,7 @@ public class Store {
 	
 	private String location;
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
 	private List<Pet> pets;
 
 	public Integer getId() {

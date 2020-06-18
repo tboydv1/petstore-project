@@ -18,9 +18,8 @@ import com.petstore.repository.PetRepository;
 import com.petstore.repository.StoreRepository;
 
 @SpringBootTest
-//@Transactional
 @Sql(scripts = {"classpath:/db/insert.sql"})
-class PetstoreApplicationTests {
+class StoreRepositoryTest {
 
 	Logger logger = Logger.getLogger(getClass().getName());
 
@@ -30,15 +29,14 @@ class PetstoreApplicationTests {
 	@Autowired
 	private StoreRepository storeRepository;
 	
-	Pet dowry;
+	Store petLovers;
 	
 	@BeforeEach
 	public void setUp() {
 		
-		dowry = new Pet();
-		dowry.setColor("Brown");
-		dowry.setName("dowry");
-		dowry.setType("cat");
+		petLovers = new Store();
+		petLovers.setLocation("Yaba");
+		petLovers.setName("Petlovers");
 		
 	}
 	
@@ -46,60 +44,47 @@ class PetstoreApplicationTests {
 	@Test
 	void contextLoads() {
 		
-		assertThat(petRepository).isNotNull();
 		assertThat(storeRepository).isNotNull();
-	}
-	
-	@Test
-	void savePetsTodb() {
-		
-		logger.info("Creating a pet object");
-		
-		
-		logger.info("Saving pet Object to db"+dowry);
-		
-		petRepository.save(dowry);
-		
-		logger.info("Pet object after saving"+dowry);
-		
-		Pet savedPet = petRepository.findById(dowry.getId()).get();
-		
-		assertThat(savedPet).isNotNull();
-		assertThat(savedPet.getName()).isEqualTo(dowry.getName());
+		assertThat(petRepository).isNotNull();
 
-		
 	}
-	
-	
-	
+
 	@Test
 	void savePetsToStore() {
-		
-		logger.info("Creating a store");
-		Store store = new Store();
-		store.setLocation("Yaba");
-		store.setName("Petlovers");
-		
-		List<Pet> pets = new ArrayList<>();
-		
-		pets.add(dowry);
 	
-		store.setPets(pets);
 		
-		logger.info("Saving store object"+store);
-		storeRepository.save(store);
+		logger.info("Saving store object"+petLovers);
+		storeRepository.save(petLovers);
 		
-		logger.info("Store after saving"+store);
+		logger.info("Store after saving"+petLovers);
+		
+		
+		logger.info("creating pet object database");
+		Pet bob =new Pet();
+		bob.setColor("gold");
+		bob.setName("jane");
+		bob.setPetType("rabbit");
+		
+		logger.info("pet --> {}"+bob);
+
+		
+		logger.info("Adding pets to store");
+		List<Pet> pets = new ArrayList<>();
+		pets.add(bob);
+		
+		petLovers.setPets(pets);
+		
+		
+		storeRepository.save(petLovers);
+		
+		Store savedStore = storeRepository.findById(petLovers.getId()).get();
+		logger.info("saved store object"+savedStore);
+		assertThat(savedStore.getPets()).isNotNull();
+
 			
 	}
 	
-	@Test
-	public void findAll() {
-		
-		List<Pet> pets = petRepository.findAll();
-		
-		assertThat(pets.size()).isEqualTo(4);
-	}
+
 	
 	
 

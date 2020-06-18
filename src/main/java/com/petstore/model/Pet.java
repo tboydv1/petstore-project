@@ -3,6 +3,7 @@
  */
 package com.petstore.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,9 @@ public class Pet {
 	
 	private String petType;
 	
-
+	
+	@ManyToOne(cascade = { CascadeType.MERGE})
+	private Store store;
 
 	public Integer getId() {
 		return id;
@@ -52,13 +55,22 @@ public class Pet {
 	public void setColor(String color) {
 		this.color = color;
 	}
+	
 
-	public String getType() {
+	public String getPetType() {
 		return petType;
 	}
 
-	public void setType(String type) {
-		this.petType = type;
+	public void setPetType(String petType) {
+		this.petType = petType;
+	}
+
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
 	}
 
 	@Override
