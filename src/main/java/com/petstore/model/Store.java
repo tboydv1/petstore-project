@@ -1,68 +1,107 @@
 package com.petstore.model;
 
+
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 
 @Entity
 public class Store {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	
-	private String name;
-	
-	private String location;
-	
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-	private List<Pet> pets;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer Id;
 
-	public Integer getId() {
-		return id;
-	}
+    @Column(nullable = false)
+    private String storeName;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Column(nullable = false)
+    private Integer storeNumber;
 
-	public String getName() {
-		return name;
-	}
+    private String address;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String city;
 
-	public String getLocation() {
-		return location;
-	}
+    private String state;
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    private String country;
 
-	public List<Pet> getPets() {
-		return pets;
-	}
+    @OneToMany(mappedBy = "petStore", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}
+    )
+    private List<Pet> pets;
 
-	public void setPets(List<Pet> pets) {
-		this.pets = pets;
-	}
+    public void addPet(Pet onePet){
 
-	@Override
-	public String toString() {
-		return "Store [id=" + id + ", name=" + name + ", location=" + location + ", pets=" + pets + "]";
-	}
-	
-	
-	
-	
+        if(this.pets == null){
+            this.pets = new ArrayList<>();
+        }
+
+        this.pets.add(onePet);
+    }
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public Integer getStoreNumber() {
+        return storeNumber;
+    }
+
+    public void setStoreNumber(Integer storeNumber) {
+        this.storeNumber = storeNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
 }

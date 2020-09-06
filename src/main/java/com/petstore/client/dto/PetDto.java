@@ -1,44 +1,24 @@
-package com.petstore.model;
+package com.petstore.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.petstore.model.PetSex;
+import com.petstore.model.PetTypes;
+import com.petstore.model.Store;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table()
-public class Pet{
+public class PetDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
-
-    @Column(nullable = false, length = 50)
     private String name;
-
     private String breed;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private PetTypes types;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private PetSex sex;
-
-    @Column(nullable = false)
     private Integer age;
-
-    @ManyToOne()
-    @JoinColumn(name = "store_pets")
-    @ToString.Exclude
-    @JsonIgnore
-    private Store petStore;
-
     private Date birthDate;
-
 
     public Integer getId() {
         return Id;
@@ -88,14 +68,6 @@ public class Pet{
         this.age = age;
     }
 
-    public Store getPetStore() {
-        return petStore;
-    }
-
-    public void setPetStore(Store petStore) {
-        this.petStore = petStore;
-    }
-
     public Date getBirthDate() {
         return birthDate;
     }
@@ -106,14 +78,13 @@ public class Pet{
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Pet{");
+        final StringBuilder sb = new StringBuilder("PetDto{");
         sb.append("Id=").append(Id);
         sb.append(", name='").append(name).append('\'');
         sb.append(", breed='").append(breed).append('\'');
         sb.append(", types=").append(types);
         sb.append(", sex=").append(sex);
         sb.append(", age=").append(age);
-        sb.append(", petStore=").append(petStore);
         sb.append(", birthDate=").append(birthDate);
         sb.append('}');
         return sb.toString();

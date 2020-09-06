@@ -3,17 +3,27 @@
  */
 package com.petstore.client;
 
+import java.net.URI;
 import java.util.List;
+import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.petstore.client.dto.PetDto;
+import com.petstore.exception.PetNotFoundException;
+import com.petstore.service.pet.PetMapper;
+import com.petstore.util.PatchMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.petstore.model.Pet;
-import com.petstore.service.PetService;
+import com.petstore.service.pet.PetService;
+
 
 /**
  * @author user
@@ -21,28 +31,39 @@ import com.petstore.service.PetService;
  */
 
 @RestController
+@RequestMapping("/api")
 public class PetController {
 
-	@Autowired @Qualifier("petservice")
+	@Autowired
 	PetService petServiceImpl;
+
+	@Autowired
+	PatchMapper patchMapperUtil;
+
+	@Autowired
+	PetMapper petMapper;
+
+	Logger log = Logger.getLogger(getClass().getName());
 	
 	
-	@GetMapping("/pets")
-	public List<Pet> sayHello(){
+	@GetMapping(path = "/pets")
+	public ResponseEntity<?> findAllPets(){
 	
-		return petServiceImpl.findAll();
+		List<Pet> petList = petServiceImpl.findAll();
+
+		return new ResponseEntity<>(petList, HttpStatus.OK);
 	}
 	
-	@PostMapping("/pet")
-	public Pet savePet(@RequestBody Pet pet) {
-		
-		pet = petServiceImpl.save(pet);
-		
-		return pet;
+	@PostMapping(path = "/pet", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> savePet(@RequestBody PetDto petDto) {
+
+		log.info("Pet object to be saved --> {}"+petDto);
+		Pet pet = petServiceImpl.save(petDto);
+
+		return new ResponseEntity<>(pet, HttpStatus.CREATED);
 		
 	}
-	
-	
+
 	
 
 

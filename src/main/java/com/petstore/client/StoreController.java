@@ -3,21 +3,17 @@
  */
 package com.petstore.client;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import com.petstore.service.exception.StoreNotFoundException;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.petstore.model.Pet;
 import com.petstore.model.Store;
-import com.petstore.service.StoreService;
+import com.petstore.service.store.StoreService;
 
 /**
  * @author user
@@ -25,48 +21,54 @@ import com.petstore.service.StoreService;
  */
 
 @RestController
+@RequestMapping("/api")
 public class StoreController {
 	
 	
 	Logger log= Logger.getLogger(getClass().getName());
 	
-	@Autowired @Qualifier("storeService")
+	@Autowired
 	StoreService storeServiceImpl;
 	
 	
 	@GetMapping("/stores")
-	public List<Store> returnAllStores(){
+	public ResponseEntity<?> findAllStores(){
 	
-		return storeServiceImpl.findAll();
+		return ResponseEntity.ok().body(storeServiceImpl.findAll());
 	}
-	
+
+	/**
+	 * @param store
+	 * @return
+	 */
 	@PostMapping("/store")
-	public Store savePet(@RequestBody Store store) {
+	public ResponseEntity<Store> CreateStore(@RequestBody Store store) {
 		
 		store = storeServiceImpl.save(store);
 		
-		return store;
-		
+		return new ResponseEntity<>(store, HttpStatus.CREATED);
 	}
-	
-	
+
+	/**
+	 *
+	 * @param pet
+	 * @param storeId
+	 * @return
+	 */
 	@PostMapping("/storePets{storeId}")
-	public Store addPetToStore(@RequestBody Pet pet, @RequestParam("storeId") Integer storeId) {
-		
-		log.info("New request Pet --->{"+pet+"}"+"\n to store Id --> "+storeId);
-		
-		Store savedStore = storeServiceImpl.findOne(storeId);
-		
-		List<Pet> petList = new ArrayList<>();
-		petList.add(pet);
-		
-		if(!(savedStore == null)) {
-			
-			savedStore.setPets(petList);
+	public ResponseEntity<?> addPetToStore(@RequestBody Pet pet, @RequestParam("storeId") Integer storeId) {
+
+		Store store = null;
+		try {
+
+			store = storeServiceImpl.addPets(pet, storeId);
+
+		} catch (StoreNotFoundException e) {
+			e.printStackTrace();
 		}
-		
-		return storeServiceImpl.save(savedStore);
-		
+
+		return ResponseEntity.ok().body(store);
+
 	}
 	
 	

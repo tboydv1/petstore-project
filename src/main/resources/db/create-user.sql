@@ -1,5 +1,7 @@
-CREATE USER IF NOT EXISTS `petuser`@`localhost` IDENTIFIED BY 'pet_user1';
-GRANT ALL PRIVILEGES ON petstore_db.* to `petuser`@`localhost`;
-FLUSH PRIVILEGES;
+DROP USER IF EXISTS 'petuser'@'localhost';
+CREATE USER 'petuser'@'localhost' IDENTIFIED BY 'petuser123';
+GRANT ALL PRIVILEGES ON petstoredb.* TO 'petuser'@'localhost';
+FLUSH PRIVILEGES ;
 
-CREATE  DATABASE IF NOT EXISTS petstore_db;
+DROP DATABASE IF EXISTS petstoredb;
+CREATE DATABASE petstoredb;
